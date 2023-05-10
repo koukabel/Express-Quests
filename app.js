@@ -30,6 +30,9 @@ app.post("/api/movies", movieHandlers.postMovie);
 app.post("/api/users", usersHandlers.postUser);
 app.put("/api/movies/:id", movieHandlers.modifyMovie);
 app.put("/api/users/:id", usersHandlers.modifyUser);
+app.delete("/api/movies/:id", movieHandlers.deleteMovie);
+app.delete("/api/users/:id", usersHandlers.deleteUser);
+
 
 app.listen(port, (err) => {
   if (err) {
