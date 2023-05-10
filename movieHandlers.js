@@ -26,12 +26,49 @@ const database = require("./database");
 //     duration: 180,
 //   },
 // ];
+//localhost:5000/api/movies?color=0
+// const getMovies = (req, res) => {
+//   let sql = "select * from movies";
+//   const sqlValues = [];
+//   //Si req.query.color est défini,
+//   // tu devrais modifier la requête SQL en select * from movies where color = ?,
+//   if (req.query.color != null) {
+//     sql += " where color = ?";
+//     sqlValues.push(req.query.color);
+//   }
+//   database
+//     .query(sql, sqlValues)
+//     .then(([movies]) => {
+//       res.json(movies);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       res.status(500).send("Error retrieving data from database");
+//     });
+// };
 
 const getMovies = (req, res) => {
+  let sql = "select * from movies";
+  const sqlValues = [];
+  //Si req.query.color est défini,
+  // tu devrais modifier la requête SQL en select * from movies where color = ?,
+  if (req.query.color != null) {
+    sql += " where color = ?";
+    sqlValues.push(req.query.color);
+  
+    if (req.query.max_duration != null) {
+      sql += " and duration <= ?";
+      sqlValues.push(req.query.max_duration);
+    }
+  } else if (req.query.max_duration != null) {
+    sql += " where duration <= ?";
+    sqlValues.push(req.query.max_duration);
+  }
+ 
   database
-    .query("select * from movies")
+    .query(sql, sqlValues)
     .then(([movies]) => {
-      res.status(200).json(movies);
+      res.json(movies);
     })
     .catch((err) => {
       console.error(err);
@@ -102,10 +139,7 @@ const deleteMovie = (req, res) => {
   const { title, director, year, color, duration } = req.body;
 
   database
-    .query(
-      "DELETE FROM movies WHERE id = ?",
-      [id]
-    )
+    .query("DELETE FROM movies WHERE id = ?", [id])
     .then(([result]) => {
       if (result.affectedRows === 0) {
         res.status(404).send("Not Found");
@@ -119,13 +153,10 @@ const deleteMovie = (req, res) => {
     });
 };
 
-
-
-
 module.exports = {
   getMovies,
   getMovieById,
-  postMovie, 
+  postMovie,
   modifyMovie,
   deleteMovie,
 };
