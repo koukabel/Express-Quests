@@ -63,51 +63,58 @@ CREATE TABLE users (
     lastname varchar(255) NOT NULL,
     email varchar(255) UNIQUE NOT NULL,
     city varchar(255) DEFAULT NULL,
-    language varchar(255) DEFAULT NULL
+    language varchar(255) DEFAULT NULL, 
+    hashedPassword varchar(255) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 INSERT INTO
-  users (firstname, lastname, email, city, language)
+  users (firstname, lastname, email, city, language, hashedPassword)
 VALUES
   (
     'John',
     'Doe',
     'john.doe@example.com',
     'Paris',
-    'English'
+    'English',
+       "$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ"
   ),
   (
     'Valeriy',
     'Appius',
     'valeriy.appius@example.com',
     'Moscow',
-    'Russian'
+    'Russian',
+       "$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ"
   ),
   (
     'Ralf',
     'Geronimo',
     'ralf.geronimo@example.com',
     'New York',
-    'Italian'
+    'Italian',
+       "$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ"
   ),
   (
     'Maria',
     'Iskandar',
     'maria.iskandar@example.com',
     'New York',
-    'German'
+    'German',
+       "$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ"
   ),
   (
     'Jane',
     'Doe',
     'jane.doe@example.com',
     'London',
-    'English'
+    'English',
+       "$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ"
   ),
   (
     'Johanna',
     'Martino',
     'johanna.martino@example.com',
     'Milan',
-    'Spanish'
+    'Spanish',
+       "$argon2id$v=19$m=16,t=2,p=1$emVmZXpmemZlemVmZWR6ZXplZg$rqZkhxu5YbqCGHPNrjJZpQ"
   );

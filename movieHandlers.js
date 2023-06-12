@@ -1,72 +1,25 @@
 const database = require("./database");
 
-// const movies = [
-//   {
-//     id: 1,
-//     title: "Citizen Kane",
-//     director: "Orson Wells",
-//     year: "1941",
-//     colors: false,
-//     duration: 120,
-//   },
-//   {
-//     id: 2,
-//     title: "The Godfather",
-//     director: "Francis Ford Coppola",
-//     year: "1972",
-//     colors: true,
-//     duration: 180,
-//   },
-//   {
-//     id: 3,
-//     title: "Pulp Fiction",
-//     director: "Quentin Tarantino",
-//     year: "1994",
-//     color: true,
-//     duration: 180,
-//   },
-// ];
-//localhost:5000/api/movies?color=0
-// const getMovies = (req, res) => {
-//   let sql = "select * from movies";
-//   const sqlValues = [];
-//   //Si req.query.color est défini,
-//   // tu devrais modifier la requête SQL en select * from movies where color = ?,
-//   if (req.query.color != null) {
-//     sql += " where color = ?";
-//     sqlValues.push(req.query.color);
-//   }
-//   database
-//     .query(sql, sqlValues)
-//     .then(([movies]) => {
-//       res.json(movies);
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(500).send("Error retrieving data from database");
-//     });
-// };
 
 const getMovies = (req, res) => {
   let sql = "select * from movies";
   const sqlValues = [];
-  //Si req.query.color est défini,
-  // tu devrais modifier la requête SQL en select * from movies where color = ?,
+
   if (req.query.color != null) {
     sql += " where color = ?";
     sqlValues.push(req.query.color);
   
-    if (req.query.max_duration != null) {
+    if (req.query.max_duration != null){
       sql += " and duration <= ?";
-      sqlValues.push(req.query.max_duration);
+      sqlValues.push(req.query.max_duration)
     }
-  } else if (req.query.max_duration != null) {
+  } else if (req.query.max_duration != null){
     sql += " where duration <= ?";
-    sqlValues.push(req.query.max_duration);
+    sqlValues.push(req.query.max_duration)
   }
- 
+
   database
-    .query(sql, sqlValues)
+    .query(sql, sqlValues) // = ("select * from movies where color = ?", [req.query.color]) comme dans les autres handlers, c'est juste qu'on utilise des variables.
     .then(([movies]) => {
       res.json(movies);
     })
@@ -75,6 +28,8 @@ const getMovies = (req, res) => {
       res.status(500).send("Error retrieving data from database");
     });
 };
+
+
 
 const getMovieById = (req, res) => {
   const id = parseInt(req.params.id);
@@ -104,7 +59,6 @@ const postMovie = (req, res) => {
     )
     .then(([result]) => {
       res.location(`/api/movies/${result.insertId}`).sendStatus(201);
-      //console.log(result.insertId)
     })
     .catch((err) => {
       console.error(err);
@@ -112,7 +66,8 @@ const postMovie = (req, res) => {
     });
 };
 
-const modifyMovie = (req, res) => {
+
+const updateMovie = (req, res) => {
   const id = parseInt(req.params.id);
   const { title, director, year, color, duration } = req.body;
 
@@ -136,15 +91,15 @@ const modifyMovie = (req, res) => {
 
 const deleteMovie = (req, res) => {
   const id = parseInt(req.params.id);
-  const { title, director, year, color, duration } = req.body;
-
+  
   database
-    .query("DELETE FROM movies WHERE id = ?", [id])
+  .query(
+    "delete from movies where id = ?", [id])
     .then(([result]) => {
       if (result.affectedRows === 0) {
         res.status(404).send("Not Found");
       } else {
-        res.sendStatus(405);
+        res.sendStatus(204);
       }
     })
     .catch((err) => {
@@ -157,6 +112,6 @@ module.exports = {
   getMovies,
   getMovieById,
   postMovie,
-  modifyMovie,
-  deleteMovie,
+  updateMovie,
+  deleteMovie
 };
