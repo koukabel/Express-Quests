@@ -43,6 +43,26 @@ const getUsersById =(req, res) => {
   });
 };
 
+const getUserByEmailWithPasswordAndPassToNext = (req, res, next) => {
+  const email = req.body.email;
+  database
+    .query("SELECT * FROM users WHERE email = ?", [email])
+    .then(([users]) => {
+      if (users[0] != null) {
+        req.user = users[0];
+        console.log(req.user); 
+        next();
+      } else {
+        res.sendStatus(401);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    });
+};
+
+
 const postUser = (req, res) => {
   const { firstname, lastname, email, city, language, hashedPassword } = req.body;
 
@@ -107,6 +127,7 @@ const deleteUser = (req, res) => {
 module.exports = {
     getUsers,
     getUsersById,
+    getUserByEmailWithPasswordAndPassToNext,
     postUser,
     updateUser,
     deleteUser
